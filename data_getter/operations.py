@@ -20,11 +20,15 @@ def get_friends_from_user(steam_id, api_key, relationship="friend"):
     response = requests.get(url)
     code = response.status_code
     content = response.json()
-    if (code == 200) and ("friendslist" in content.keys()):
+    if code != 200:
+        if code != 401:
+            print(f"Received status code {code}")
+        friends = []
+    elif "friendslist" not in content.keys():
+        friends = []
+    else:
         friends = content["friendslist"]["friends"]
         friends = [friend["steamid"] for friend in friends]
-    else:
-        friends = []
     return friends
 
 
